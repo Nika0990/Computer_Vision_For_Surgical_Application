@@ -65,7 +65,8 @@ blender --background --factory-startup --python synthetic_data_generator.py \
     --keypoints /path/to/keypoints.json \
     --output_dir ./synthetic_dataset \
     --num_images 3000 \
-    --render_samples 64
+    --render_samples 64 \
+    --seed 42
 ```
 
 Parameters:
