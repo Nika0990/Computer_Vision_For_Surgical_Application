@@ -268,7 +268,7 @@ Parameters:
 
 The script automatically patches data.yaml if needed with:
 - Single class: ["instrument"]
-- 5 keypoints with 3 dimensions
+- 5 keypoints
 - Appropriate flip indices for left/right consistency
 
 ### 7. Model Inference (`predict.py`)
