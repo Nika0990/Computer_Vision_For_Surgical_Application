@@ -99,16 +99,14 @@ python instrument_pose_yolov11.py \
   --step prepare \
   --root /path/to/dataset \
   --out_dir /path/to/output \
-  --val_pct 0.1 \
-  --seed 42 \
   --aug_copies 1 \
   --tweezer_boost 0 \
   --band_prob 0.35 \
   --glove_prob 0.55 \
-  --grip_prob 0.40 \
-  --band_per_image 0.60 \
-  --glove_per_image 0.60 \
-  --grip_per_image 0.60 \
+  --grip_prob 0.45 \
+  --band_per_image 0.55 \
+  --glove_per_image 0.55 \
+  --grip_per_image 0.55 \
   --or_prob 0.50 \
   --video_prob 0.35
 ```
@@ -142,11 +140,9 @@ python instrument_pose_yolov11.py \
   --out_dir /path/to/prepared_data \
   --model yolo11l-pose.pt \
   --epochs 100 \
-  --imgsz 1024 \
-  --batch -1 \
+  --imgsz 832 \
+  --batch 8 \
   --device 0 \
-  --workers 8 \
-  --run_project runs/pose \
   --run_name train_hdri_background
 ```
 
@@ -172,7 +168,8 @@ python video_to_yolo_pose.py \
     --source /path/to/video.mp4 \
     --out_dir /path/to/output/dir \
     --imgsz 1280 \
-    --conf 0.25 \
+    --conf 0.7 \
+    --kpt_conf 0.7 \
     --iou 0.5 \
     --device 0 \
     --stride_frames 1
@@ -209,12 +206,12 @@ Parameters:
 ### 5. Data Mixing and Splitting (`mix_and_resplit_yolo_pose.py`)
 
 ```bash
-python mix_and_resplit_yolo_pose.py \
-    --base_yolo /path/to/base/dataset \
-    --extra /path/to/extra1 /path/to/extra2 \
-    --out_dir /path/to/output \
-    --val_pct 0.10 \
-    --seed 42 \
+python mix_and_resplit_yolo_pose.py 
+    --base_yolo /path/to/base/dataset 
+    --extra /path/to/extra1 /path/to/extra2 
+    --out_dir /path/to/output 
+    --val_pct 0.10 
+    --seed 42 
     --force
 ```
 
@@ -228,18 +225,70 @@ Parameters:
   - `--seed`: Random seed (default: 42)
   - `--force`: Clear output directory if it exists
 
-### 6. Model Inference (`predict.py`)
+### 6. YOLO Training with Predictions (`yolo_train_with_pred.py`)
+
+This script trains YOLOv11-pose directly from an existing YOLO dataset. It expects a standard YOLO dataset structure:
+```
+yolo_mixed/
+  ├─ train/
+  │   ├─ images/*.jpg|png
+  │   └─ labels/*.txt
+  ├─ val/
+  │   ├─ images/*.jpg|png
+  │   └─ labels/*.txt
+  ├─ data.yaml
+  └─ manifest.csv   (optional)
+```
+
+```bash
+python yolo_train_with_pred.py 
+    --data /path/to/data.yaml 
+    --model yolo11l-pose.pt 
+    --epochs 100 
+    --imgsz 1024 
+    --batch -1 
+    --device 0 
+    --run_project runs/pose 
+    --run_name train_from_yolo_mixed 
+    --resume
+```
+
+Parameters:
+- Required:
+  - `--data`: Path to data.yaml or dataset folder containing data.yaml
+- Model Configuration:
+  - `--model`: Initial model weights (default: yolo11l-pose.pt)
+  - `--epochs`: Number of training epochs (default: 100)
+  - `--imgsz`: Input image size (default: 1024)
+  - `--batch`: Batch size (-1 for auto) (default: -1)
+  - `--device`: CUDA device or 'cpu' (default: '0')
+  - `--workers`: Number of worker threads (auto if not specified)
+- Run Configuration:
+  - `--run_project`: Project output directory (default: runs/pose)
+  - `--run_name`: Name of this training run (default: train_from_yolo_mixed)
+  - `--resume`: Resume from last checkpoint in run folder
+
+The script automatically patches data.yaml if needed with:
+- Single class: ["instrument"]
+- 5 keypoints with 3 dimensions
+- Appropriate flip indices for left/right consistency
+
+### 7. Model Inference (`predict.py`)
 
 ```bash
 python predict.py \
     --weights /path/to/weights.pt \
     --source /path/to/image \
     --output annotated.png \
-    --conf 0.4 \
+    --conf 0.7 \
     --iou 0.5 \
     --imgsz 1280 \
     --device 0 \
-    --kpt_conf 0.20
+    --kpt_conf 0.5 \
+    --thickness 2 \
+    --radius 6 \
+    --labels 
+    --output /path/to/your_output.jpg
 ```
 
 Parameters:
@@ -262,11 +311,12 @@ python video.py \
     --weights /path/to/weights.pt \
     --source /path/to/video.mp4 \
     --output annotated.mp4 \
-    --conf 0.4 \
+    --conf 0.7 \
+    --kpt_conf 0.7 \
     --iou 0.5 \
     --imgsz 1280 \
     --device 0 \
-    --stride_frames 1
+    --stride_frames 1 \
 ```
 
 Parameters:
@@ -281,6 +331,7 @@ Parameters:
   - `--device`: CUDA device or 'cpu' (default: '0')
 - Processing Options:
   - `--stride_frames`: Process every Nth frame (default: 1)
+  - `--kpt_conf`: Minimum keypoint confidence to draw
 
 ## Data Format
 
