@@ -365,7 +365,6 @@ The project uses a JSON annotation format:
 
 ## Model Architecture and Training Phases
 
-The system uses YOLOv11 for object detection and pose estimation, with custom modifications for surgical tool tracking. The model is designed to detect tool endpoints and estimate their 3D pose in real-time.
 
 ### Training Phases Overview
 
