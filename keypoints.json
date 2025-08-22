@@ -1,0 +1,259 @@
+{
+  "instruments": [
+    {
+      "instrument": "needle_holder",
+      "mesh_file": "NH1.obj",
+      "keypoints": {
+        "left_tip":     145192,
+        "right_tip":     89076,
+        "hinge_center": 178491,
+        "left_ring":     41677,
+        "right_ring":   200764
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH2.obj",
+      "keypoints": {
+        "left_tip":     149188,
+        "right_tip":     87947,
+        "hinge_center": 280156,
+        "left_ring":     66506,
+        "right_ring":   207641
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH3.obj",
+      "keypoints": {
+        "left_tip":     145187,
+        "right_tip":     87951,
+        "hinge_center": 154875,
+        "left_ring":     15491,
+        "right_ring":   207693
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH4.obj",
+      "keypoints": {
+        "left_tip":     145179,
+        "right_tip":     89162,
+        "hinge_center": 155365,
+        "left_ring":     64042,
+        "right_ring":   207706
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH5.obj",
+      "keypoints": {
+        "left_tip":     145174,
+        "right_tip":     87947,
+        "hinge_center": 154754,
+        "left_ring":     57715,
+        "right_ring":   209528
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH6.obj",
+      "keypoints": {
+        "left_tip":     145174,
+        "right_tip":     87942,
+        "hinge_center": 280418,
+        "left_ring":     65013,
+        "right_ring":   207680
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH7.obj",
+      "keypoints": {
+        "left_tip":     149188,
+        "right_tip":     89075,
+        "hinge_center": 280418,
+        "left_ring":     61327,
+        "right_ring":   209537
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH8.obj",
+      "keypoints": {
+        "left_tip":     145167,
+        "right_tip":     89077,
+        "hinge_center": 280415,
+        "left_ring":     55114,
+        "right_ring":   209699
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH9.obj",
+      "keypoints": {
+        "left_tip":     145004,
+        "right_tip":     87947,
+        "hinge_center": 154103,
+        "left_ring":     59229,
+        "right_ring":   200848
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH10.obj",
+      "keypoints": {
+        "left_tip":     145177,
+        "right_tip":     89080,
+        "hinge_center": 154106,
+        "left_ring":     62196,
+        "right_ring":   201549
+      }
+    }, 
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH11.obj",
+      "keypoints": {
+        "left_tip":     145166,
+        "right_tip":     80948,
+        "hinge_center": 280404,
+        "left_ring":     11089,
+        "right_ring":   200859
+      }
+    },
+	{
+      "instrument": "needle_holder",
+      "mesh_file": "NH12.obj",
+      "keypoints": {
+        "left_tip":     147942,
+        "right_tip":     81109,
+        "hinge_center": 174359,
+        "left_ring":     65034,
+        "right_ring":   217726
+      }
+    },
+{
+      "instrument": "needle_holder",
+      "mesh_file": "NH13.obj",
+      "keypoints": {
+        "left_tip":     149033,
+        "right_tip":     75227,
+        "hinge_center": 154366,
+        "left_ring":     67004,
+        "right_ring":   210258
+      }
+    },
+{
+      "instrument": "needle_holder",
+      "mesh_file": "NH14.obj",
+      "keypoints": {
+        "left_tip":     145051,
+        "right_tip":     75426,
+        "hinge_center": 154370,
+        "left_ring":      8096,
+        "right_ring":   209595
+      }
+    },
+{
+      "instrument": "needle_holder",
+      "mesh_file": "NH15.obj",
+      "keypoints": {
+        "left_tip":     148884,
+        "right_tip":     78369,
+        "hinge_center": 154367,
+        "left_ring":      8093,
+        "right_ring":   209580
+      }
+    },
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T1.obj",
+	  "keypoints": {
+		"left_tip":     232049,
+		"right_tip":    243369,
+		"hinge_center": 252909
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T2.obj",
+	  "keypoints": {
+		"left_tip":     232049,
+		"right_tip":    239607,
+		"hinge_center": 252926
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T3.obj",
+	  "keypoints": {
+		"left_tip":     232049,
+		"right_tip":    239607,
+		"hinge_center": 260464
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T4.obj",
+	  "keypoints": {
+		"left_tip":     297103,
+		"right_tip":    239607,
+		"hinge_center": 252925
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T5.obj",
+	  "keypoints": {
+		"left_tip":     297103,
+		"right_tip":    243372,
+		"hinge_center": 260468
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T6.obj",
+	  "keypoints": {
+		"left_tip":     297110,
+		"right_tip":    239600,
+		"hinge_center": 252930
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T7.obj",
+	  "keypoints": {
+		"left_tip": 296807,
+		"right_tip": 243354,
+		"hinge_center": 252926
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T8.obj",
+	  "keypoints": {
+		"left_tip": 297099,
+		"right_tip": 254789,
+		"hinge_center": 252930
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T9.obj",
+	  "keypoints": {
+		"left_tip": 296284,
+		"right_tip": 250933,
+		"hinge_center": 260465
+	  }
+	},
+	{
+	  "instrument": "tweezers",
+	  "mesh_file": "T10.obj",
+	  "keypoints": {
+		"left_tip": 297105,
+		"right_tip": 239606,
+		"hinge_center": 252925
+	  }
+	}
+	]
+}

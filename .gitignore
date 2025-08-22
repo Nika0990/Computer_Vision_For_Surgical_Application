@@ -1,0 +1,3 @@
+# Ignore synthetic dataset and mixed data
+synthetic_data/
+yolo_mixed/
