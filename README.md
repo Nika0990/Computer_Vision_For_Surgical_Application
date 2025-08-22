@@ -245,12 +245,11 @@ python yolo_train_with_pred.py
     --data /path/to/data.yaml 
     --model yolo11l-pose.pt 
     --epochs 100 
-    --imgsz 1024 
-    --batch -1 
+    --imgsz 832 
+    --batch 8 
     --device 0 
     --run_project runs/pose 
     --run_name train_from_yolo_mixed 
-    --resume
 ```
 
 Parameters:
@@ -266,7 +265,6 @@ Parameters:
 - Run Configuration:
   - `--run_project`: Project output directory (default: runs/pose)
   - `--run_name`: Name of this training run (default: train_from_yolo_mixed)
-  - `--resume`: Resume from last checkpoint in run folder
 
 The script automatically patches data.yaml if needed with:
 - Single class: ["instrument"]
