@@ -58,14 +58,14 @@ sudo apt-get install blender
 ### 1. Synthetic Data Generation (`synthetic_data_generator.py`)
 
 ```bash
-python synthetic_data_generator.py \
+blender --background --factory-startup --python synthetic_data_generator.py \
     --models_dir /path/to/cad/models \
     --hdris_dir /path/to/hdri/maps \
     --camera /path/to/camera.json \
     --keypoints /path/to/keypoints.json \
     --output_dir ./synthetic_dataset \
-    --num_images 1000 \
-    --render_samples 32
+    --num_images 3000 \
+    --render_samples 64
 ```
 
 Parameters:
@@ -91,43 +91,108 @@ Size and Probability Settings:
 
 ### 2. YOLOv11 Training (`instrument_pose_yolov11.py`)
 
+This script handles both dataset preparation and model training in a two-step process.
+
+#### Step 1: Prepare Dataset
 ```bash
 python instrument_pose_yolov11.py \
-    --data /path/to/data.yaml \
-    --cfg /path/to/model/config.yaml \
-    --weights /path/to/weights.pt \
-    --epochs 100 \
-    --batch-size 16 \
-    --img-size 640 \
-    --device 0
+  --step prepare \
+  --root /path/to/dataset \
+  --out_dir /path/to/output \
+  --val_pct 0.1 \
+  --seed 42 \
+  --aug_copies 1 \
+  --tweezer_boost 0 \
+  --band_prob 0.35 \
+  --glove_prob 0.55 \
+  --grip_prob 0.40 \
+  --band_per_image 0.60 \
+  --glove_per_image 0.60 \
+  --grip_per_image 0.60 \
+  --or_prob 0.50 \
+  --video_prob 0.35
 ```
 
-Parameters:
-- `--data`: Path to data configuration file
-- `--cfg`: Path to model configuration file
-- `--weights`: Path to initial weights (optional)
-- `--epochs`: Number of training epochs
-- `--batch-size`: Training batch size
-- `--img-size`: Input image size
-- `--device`: CUDA device (0, 1, cpu)
+Preparation Parameters:
+- Required:
+  - `--step`: Operation mode ('prepare', 'train', or 'prepare+train')
+  - `--root`: Dataset root directory containing images/ and ann/ folders
+  - `--out_dir`: Output directory for processed dataset
+- Dataset Split:
+  - `--val_pct`: Validation set percentage (default: 0.1)
+  - `--seed`: Random seed for reproducibility (default: 42)
+- Augmentation Control:
+  - `--aug_copies`: Number of augmented copies per image (default: 1)
+  - `--tweezer_boost`: Extra copies only for images with tweezers (default: 0)
+- Occlusion Probabilities:
+  - `--band_prob`: Probability of band occlusions (default: 0.35)
+  - `--glove_prob`: Probability of glove occlusions (default: 0.55)
+  - `--grip_prob`: Probability of hand-grip occluder (default: 0.40)
+  - `--or_prob`: Probability of OR lighting effects (default: 0.50)
+  - `--video_prob`: Probability of video-like effects (default: 0.35)
+- Occlusion Intensity:
+  - `--band_per_image`: Band occlusion strength per image (0-1, default: 0.60)
+  - `--glove_per_image`: Glove patch intensity per image (0-1, default: 0.60)
+  - `--grip_per_image`: Hand-grip occluder intensity (0-1, default: 0.60)
+
+#### Step 2: Train Model
+```bash
+python instrument_pose_yolov11.py \
+  --step train \
+  --out_dir /path/to/prepared_data \
+  --model yolo11l-pose.pt \
+  --epochs 100 \
+  --imgsz 1024 \
+  --batch -1 \
+  --device 0 \
+  --workers 8 \
+  --run_project runs/pose \
+  --run_name train_hdri_background
+```
+
+Training Parameters:
+- Required:
+  - `--out_dir`: Directory containing prepared dataset
+  - `--model`: Initial model weights (default: yolo11l-pose.pt)
+- Training Configuration:
+  - `--epochs`: Number of training epochs (default: 100)
+  - `--imgsz`: Input image size (default: 1024)
+  - `--batch`: Batch size (-1 for auto-selection)
+  - `--device`: CUDA device index or 'cpu' (default: '0')
+  - `--workers`: Number of worker threads (default: auto)
+- Output Control:
+  - `--run_project`: Project output directory (default: runs/pose)
+  - `--run_name`: Name of this training run (default: train_hdri_background)
 
 ### 3. Video Processing and Conversion (`video_to_yolo_pose.py`)
 
 ```bash
 python video_to_yolo_pose.py \
-    --input /path/to/video.mp4 \
-    --output /path/to/output/dir \
-    --frame-step 1 \
-    --start-frame 0 \
-    --end-frame -1
+    --weights /path/to/model.pt \
+    --source /path/to/video.mp4 \
+    --out_dir /path/to/output/dir \
+    --imgsz 1280 \
+    --conf 0.25 \
+    --iou 0.5 \
+    --device 0 \
+    --stride_frames 1
 ```
 
 Parameters:
-- `--input`: Input video file path
-- `--output`: Output directory for extracted frames
-- `--frame-step`: Process every nth frame (default: 1)
-- `--start-frame`: Starting frame number (default: 0)
-- `--end-frame`: Ending frame number (-1 for all frames)
+- Required:
+  - `--weights`: Path to YOLO pose model weights (.pt file)
+  - `--source`: Input video path or webcam index
+  - `--out_dir`: Output directory for images/ and labels/
+- Model Configuration:
+  - `--imgsz`: Input image size (default: 1280)
+  - `--conf`: Confidence threshold (default: 0.25)
+  - `--iou`: NMS IoU threshold (default: 0.5)
+  - `--device`: CUDA device index or 'cpu' (default: '0')
+  - `--max_det`: Maximum detections per frame (default: 50)
+- Processing Options:
+  - `--stride_frames`: Process every Nth frame (default: 1)
+  - `--kpt_conf`: Minimum keypoint confidence (default: 0.20)
+  - `--save_empty`: Save frames with no detections
 
 ### 4. Visualization Tool (`visualize_annotation.py`)
 
@@ -145,55 +210,77 @@ Parameters:
 
 ```bash
 python mix_and_resplit_yolo_pose.py \
-    --synthetic /path/to/synthetic/data \
-    --real /path/to/real/data \
-    --output /path/to/output \
-    --split-ratio 0.8
+    --base_yolo /path/to/base/dataset \
+    --extra /path/to/extra1 /path/to/extra2 \
+    --out_dir /path/to/output \
+    --val_pct 0.10 \
+    --seed 42 \
+    --force
 ```
 
 Parameters:
-- `--synthetic`: Path to synthetic dataset
-- `--real`: Path to real dataset
-- `--output`: Output directory for mixed dataset
-- `--split-ratio`: Train/val split ratio
+- Required:
+  - `--base_yolo`: Base YOLO dataset directory
+  - `--extra`: One or more extra folders to mix in
+  - `--out_dir`: Output directory for mixed dataset
+- Options:
+  - `--val_pct`: Validation set percentage (default: 0.10)
+  - `--seed`: Random seed (default: 42)
+  - `--force`: Clear output directory if it exists
 
 ### 6. Model Inference (`predict.py`)
 
 ```bash
 python predict.py \
     --weights /path/to/weights.pt \
-    --source /path/to/image_or_video \
-    --img-size 640 \
-    --conf-thres 0.25 \
-    --iou-thres 0.45 \
-    --device 0
+    --source /path/to/image \
+    --output annotated.png \
+    --conf 0.4 \
+    --iou 0.5 \
+    --imgsz 1280 \
+    --device 0 \
+    --kpt_conf 0.20
 ```
 
 Parameters:
-- `--weights`: Path to model weights
-- `--source`: Path to input image/video
-- `--img-size`: Input image size
-- `--conf-thres`: Confidence threshold
-- `--iou-thres`: NMS IoU threshold
-- `--device`: CUDA device (0, 1, cpu)
+- Required:
+  - `--weights`: Path to trained pose model weights (.pt file)
+  - `--source`: Input image path
+- Output:
+  - `--output`: Output image path (default: annotated.png)
+- Model Configuration:
+  - `--conf`: Box confidence threshold (default: 0.4)
+  - `--iou`: NMS IoU threshold (default: 0.5)
+  - `--imgsz`: Inference size, multiple of 32 (default: 1280)
+  - `--device`: CUDA device or 'cpu' (default: '0')
+  - `--kpt_conf`: Minimum keypoint confidence to draw (default: 0.20)
 
 ### 7. Video Processing (`video.py`)
 
 ```bash
 python video.py \
-    --input /path/to/input.mp4 \
-    --output /path/to/output.mp4 \
-    --model /path/to/weights.pt \
-    --conf-thres 0.25 \
-    --fps 30
+    --weights /path/to/weights.pt \
+    --source /path/to/video.mp4 \
+    --output annotated.mp4 \
+    --conf 0.4 \
+    --iou 0.5 \
+    --imgsz 1280 \
+    --device 0 \
+    --stride_frames 1
 ```
 
 Parameters:
-- `--input`: Input video file
-- `--output`: Output video file
-- `--model`: Path to model weights
-- `--conf-thres`: Confidence threshold
-- `--fps`: Output video FPS
+- Required:
+  - `--weights`: Path to trained pose model weights (.pt file)
+  - `--source`: Input video path or webcam index
+  - `--output`: Output video path (default: annotated.mp4)
+- Model Configuration:
+  - `--conf`: Box confidence threshold (default: 0.4)
+  - `--iou`: NMS IoU threshold (default: 0.5)
+  - `--imgsz`: Inference size, multiple of 32 (default: 1280)
+  - `--device`: CUDA device or 'cpu' (default: '0')
+- Processing Options:
+  - `--stride_frames`: Process every Nth frame (default: 1)
 
 ## Data Format
 
