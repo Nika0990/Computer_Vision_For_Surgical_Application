@@ -242,7 +242,7 @@ The training process is divided into multiple phases to achieve optimal performa
 - Helps model learn fundamental tool features and geometric relationships
 
 Due to file size limitations, the pre-trained weights are hosted using Git LFS (Large File Storage):
-- Phase 2 weights: [Download weights_phase2.pt](https://github.com/Nika0990/Computer_Vision_For_Surgical_Application/raw/master/weights_phase2.pt)
+- Phase 2 weights: [Download weights_phase2.pt](https://github.com/Nika0990/Computer_Vision_For_Surgical_Application/raw/main/weights_phase2.pt)
 
 #### Phase 3 Weights (`weights_phase3.pt`)
 - Advanced training phase incorporating real surgical data
@@ -252,7 +252,7 @@ Due to file size limitations, the pre-trained weights are hosted using Git LFS (
 - Addresses domain adaptation between synthetic and real data
 
 Download link for final weights:
-- Phase 3 weights: [Download weights_phase3.pt](https://github.com/Nika0990/Computer_Vision_For_Surgical_Application/raw/master/weights_phase3.pt)
+- Phase 3 weights: [Download weights_phase3.pt](https://github.com/Nika0990/Computer_Vision_For_Surgical_Application/raw/main/weights_phase3.pt)
 
 Note: If you're cloning the repository, make sure to install Git LFS first:
 ```bash
