@@ -52,9 +52,6 @@ sudo apt-get install blender
   - `ann/`: JSON annotations
   - `images/`: Source images
   - `viz/`: Visualization overlays
-- `synthetic_data/`: Generated synthetic data
-- `runs/`: Training runs and outputs
-- `yolo_mixed/`: Mixed dataset for YOLO training
 
 ## Detailed Usage Guide
 
